@@ -8,7 +8,7 @@ from aiohttp  import web
 routes = web.RouteTableDef()
 
 @routes.get("/S0")
-async def getS0(req):
+async def getS0(request):
     try:
         response = {
             "data": [],
@@ -18,11 +18,12 @@ async def getS0(req):
             async with db.execute("SELECT * FROM podaci LIMIT 100") as cur:
                 async for row in cur:
                     data = {'username': row[0], 'ghlink': row[1], 'filename': row[2], 'content': row[3]}
-                    print(data)
+                    #print(data)
                     response["data"].append(data)
             await db.commit()
+            print(response)
 
-        return web.json_response({"S0": "works", "response": response}, status=200)
+        return web.json_response(response)
     except Exception as e:
         return web.json_response({"S0": "error", "response": str(e)}, status=500)
 
